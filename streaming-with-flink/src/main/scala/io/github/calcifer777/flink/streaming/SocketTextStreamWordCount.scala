@@ -1,4 +1,4 @@
-package io.github.calcifer777.flink.batch
+package io.github.calcifer777.flink.streaming
 
 import org.apache.flink.streaming.api.scala._
 
@@ -6,12 +6,9 @@ object SocketTextStreamWordCount {
 
   def main(args: Array[String]): Unit = {
 
-    val hostName = "localhost"
-    val port = 9999
+    val flink = StreamExecutionEnvironment.getExecutionEnvironment
 
-    val env = StreamExecutionEnvironment.getExecutionEnvironment
-
-    val text = env.socketTextStream(hostName, port)
+    val text = flink.socketTextStream("localhost", 9999)
     val counts = text
       .flatMap( _.toLowerCase.split("\\W+")
       .filter( _.nonEmpty ) )
@@ -21,7 +18,7 @@ object SocketTextStreamWordCount {
 
     counts.print()
 
-    env.execute("Scala SocketTextStreamWordCount Example")
+    flink.execute("Scala SocketTextStreamWordCount Example")
   }
 
 }
