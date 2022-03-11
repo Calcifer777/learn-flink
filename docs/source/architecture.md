@@ -1,8 +1,30 @@
 # Architecture
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
+## Ecosystem
+
+- Deployment manager
+    - Local JVM
+    - Cluster Standalone / Yarn
+    - Cloud
+- Storage
+    - Files
+    - Databases
+    - Streams and queues
+- Engine
+    - Flink's runtime
+- Abastraction
+    -  Batch: DataSet
+    -  Batch: DataStream
+- Libraries
+    -  Relational: Table
+    -  Graph processing: Gelly
+    -  Machine Learning: Flink ML
+- EDA tools
+    - Zeppelin
+
+## Flink programming model
+
+Dataset
+- immutable
+- does not support operations on part of DataSet
+- stores list of its dependencies

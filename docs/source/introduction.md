@@ -10,12 +10,12 @@ an app is running.
 
 Also, it maintains exactly once semantics.
 
-## FLink vs Spark
+## Flink vs Spark
 
-|                          | Spark                                | Flink                                    |
-| ------------------------ | ------------------------------------ | ---------------------------------------- |
-| Starts as                | Starts as batch processing framework | Starts as streaming processing framework |
-| Engine approach          | microbatching                        | windowing and checkpointing              |
-| Language                 | Scala                                | Java                                     |
-| Built-in memory manager  | No                                   | Yes                                      |
-| Execution plan framework | DAG                                  | Controlled cyclic graph                  |
+|                          | Spark            | Flink                       |
+| ------------------------ | ---------------- | --------------------------- |
+| Focus                    | Batch processing | Stream processing           |
+| Language                 | Scala            | Java                        |
+| Execution plan framework | DAG              | Controlled cyclic graph     |
+| Engine approach          | microbatching    | windowing and checkpointing |
+| Built-in memory manager  | No               | Yes                         |

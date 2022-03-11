@@ -18,5 +18,5 @@ libraryDependencies += "org.apache.flink" %% "flink-streaming-scala" % flinkVers
 libraryDependencies += "org.apache.flink" %% "flink-runtime-web" % flinkVersion
 libraryDependencies += "org.apache.flink" % "flink-queryable-state-runtime" % flinkVersion
 libraryDependencies += "org.apache.derby" % "derby" % "10.13.1.1" % "provided"
-libraryDependencies += "org.slf4j"        % "slf4j-log4j12" % "1.7.25" % "runtime"
+libraryDependencies += "org.slf4j"        % "slf4j-log4j12" % "1.7.25" // % "runtime"
 libraryDependencies += "log4j"            % "log4j" % "1.2.17" % "runtime"
