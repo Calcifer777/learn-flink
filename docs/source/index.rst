@@ -10,7 +10,9 @@ Welcome to Flink Notes!
   :maxdepth: 1
   :caption: Contents:
 
+  introduction.rst
   architecture.rst
+  resources.rst
 
 
 Indices and tables
