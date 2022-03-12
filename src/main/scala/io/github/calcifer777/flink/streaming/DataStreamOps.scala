@@ -6,6 +6,7 @@ import org.apache.flink.api.scala.typeutils.Types
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.api.datastream.DataStreamSource
+import org.apache.flink.api.common.functions._
 
 object DataStreamOps {
 
@@ -17,16 +18,17 @@ object DataStreamOps {
     value: Int,
   )
 
+  case class Number(value: Long, counter: Int)
+
   def main(args: Array[String]): Unit = {
     val flink = StreamExecutionEnvironment.getExecutionEnvironment()
 
+    /*
     val path = getClass().getResource("/sales.csv").getPath()
-
     val sales = flink.readTextFile(path)
       .map(_.split(","))
       .map(r => Transaction.apply(r(0), r(1), r(2), r(3), r(4).toInt))
 
-    /*
     // Reduce: avg transaction per month
     val monthlySales = sales
       .map(r => (r.month, r.value, 1))
@@ -45,13 +47,31 @@ object DataStreamOps {
 
     // Split: split incoming stream into multiple streams (deprecated, use filter)
     // https://stackoverflow.com/a/57186264/7702100
-    val nums: DataStreamSource[Int] = flink
-      .fromElements((0 to 100):_*)
 
-    nums.iterate()
+
+    // Iterate: applies the same operation to a DS until a condition is met
+    val nums = flink
+      .fromSequence(0, 5)
+      .map(Number(_, 0))
+      .returns(Types.CASE_CLASS[Number])
+
     nums.print()
+    /* Does not work
+    val iteration = nums.iterate(5000.toLong)
+    val withIncrement = iteration
+      .map { (n: Number) => if (n.value == 10) n else Number(n.value + 1, n.counter + 1) }
+    
+    // feed data back to next iteration
+    val feedback = withIncrement.filter((n: Number) => n.counter < 10)
+    iteration.closeWith(feedback)
+
+    // data not feedback to iteration
+    val output = withIncrement.filter((n: Number) => n.counter >= 10)
+    output.print()
+    */
 
     flink.execute()
   
   }
+
 }
