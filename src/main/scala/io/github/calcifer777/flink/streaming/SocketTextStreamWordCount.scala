@@ -10,8 +10,8 @@ object SocketTextStreamWordCount {
 
     val text = flink.socketTextStream("localhost", 9999)
     val counts = text
-      .flatMap( _.toLowerCase.split("\\W+")
-      .filter( _.nonEmpty ) )
+      .flatMap( _.toLowerCase.split("\\W+") )
+      .filter( _.nonEmpty )
       .map { (_, 1) }
       .keyBy(0)
       .sum(1)
