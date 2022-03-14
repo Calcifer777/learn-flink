@@ -13,6 +13,10 @@ Welcome to Flink Notes!
   introduction.md
   architecture.md
   windowing.md
+  watermarking.md
+  state-and-checkpointing.md
+  stateful-functions.md
+  graph-processing.md
   resources.md
 
 
