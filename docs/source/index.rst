@@ -16,6 +16,7 @@ Welcome to Flink Notes!
   watermarking.md
   state-and-checkpointing.md
   stateful-functions.md
+  relational-api.md
   graph-processing.md
   resources.md
 

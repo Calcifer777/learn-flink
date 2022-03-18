@@ -10,13 +10,15 @@ scalaVersion := "2.12.15"
 
 // javacOptions ++= Seq("-source", "11", "-target", "11")
 
-val flinkVersion = "1.14.3"
+val flinkVersion = "1.14.4"
 
-libraryDependencies += "org.apache.flink" % "flink-core" % flinkVersion
+libraryDependencies += "org.apache.flink" %  "flink-core"                      % flinkVersion
 libraryDependencies += "org.apache.flink" %% "flink-scala" % flinkVersion
 libraryDependencies += "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
+libraryDependencies += "org.apache.flink" %% "flink-table-api-scala-bridge" % flinkVersion
+libraryDependencies += "org.apache.flink" %% "flink-table-planner" % flinkVersion  // needed for IDE
 libraryDependencies += "org.apache.flink" %% "flink-runtime-web" % flinkVersion
-libraryDependencies += "org.apache.flink" % "flink-queryable-state-runtime" % flinkVersion
-libraryDependencies += "org.apache.derby" % "derby" % "10.13.1.1" % "provided"
-libraryDependencies += "org.slf4j"        % "slf4j-log4j12" % "1.7.25" // % "runtime"
-libraryDependencies += "log4j"            % "log4j" % "1.2.17" % "runtime"
+libraryDependencies += "org.apache.flink" %  "flink-queryable-state-runtime" % flinkVersion
+libraryDependencies += "org.apache.derby" %  "derby"         % "10.13.1.1" % "provided"
+libraryDependencies += "org.slf4j"        %  "slf4j-log4j12" % "1.7.25" // % "runtime"
+libraryDependencies += "log4j"            %  "log4j"         % "1.2.17" % "runtime"
