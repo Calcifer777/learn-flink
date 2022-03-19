@@ -24,9 +24,10 @@ val flinkDependencies = Seq(
 )
 
 val otherDependencies = Seq(
-  "org.apache.derby" %  "derby"         % "10.13.1.1" % "provided",
-  "org.slf4j"        %  "slf4j-log4j12" % "1.7.25", // % "runtime"
-  "log4j"            %  "log4j"         % "1.2.17" //  % "runtime",
+  "org.apache.derby"           %  "derby"         % "10.13.1.1" % "provided",
+  "org.slf4j"                  %  "slf4j-log4j12" % "1.7.25", // % "runtime"
+  "log4j"                      %  "log4j"         % "1.2.17", //  % "runtime",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
 )
 
 libraryDependencies ++= flinkDependencies
@@ -38,15 +39,3 @@ Global / cancelable := true
 
 // exclude Scala library from assembly
 assembly / assemblyOption  := (assembly / assemblyOption).value.copy(includeScala = false)
-
-// assembly / assemblyMergeStrategy := {
-//   case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
-//   case PathList("META-INF", xs @ _*)                 => MergeStrategy.discard
-//   case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
-//   case "application.conf"                            => MergeStrategy.concat
-//   case "unwanted.txt"                                => MergeStrategy.discard
-//   case x => MergeStrategy.first
-//   // case x =>
-//   //   val oldStrategy = (assembly / assemblyMergeStrategy).value
-//   //   oldStrategy(x)
-// }

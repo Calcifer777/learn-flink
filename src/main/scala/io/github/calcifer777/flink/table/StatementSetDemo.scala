@@ -1,7 +1,8 @@
 package io.github.calcifer777.flink.table
 
-import org.apache.flink.streaming.api.scala._
+import com.typesafe.scalalogging.LazyLogging
 
+import org.apache.flink.streaming.api.scala._
 import org.apache.flink.table.api._
 import org.apache.flink.table.sources.CsvTableSource
 import org.apache.flink.table.sinks.CsvTableSink
@@ -9,14 +10,14 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.table.api.bridge.scala._
 import org.apache.flink.api.common.RuntimeExecutionMode
 
-object StatementSetDemo extends App {
+object StatementSetDemo extends App with LazyLogging {
 
   val env = StreamExecutionEnvironment.getExecutionEnvironment
   env.setRuntimeMode(RuntimeExecutionMode.BATCH)
   val tableEnv = StreamTableEnvironment.create(env)
 
   // val path = getClass().getResource("/sales.csv").getPath()
-  val path = "/home/calcifer/git/marco/learn-flink/src/main/resources/sales.csv"
+  val path = "/home/calcifer/git/marco/learn-flink/src/main/resources/sales.csv" // uncomment when running in cluster mode
   val source = CsvTableSource
     .builder()
     .path(path)

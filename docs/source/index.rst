@@ -11,13 +11,12 @@ Welcome to Flink Notes!
   :caption: Contents:
 
   introduction.md
+  state-and-checkpointing.md
   architecture.md
   windowing.md
   watermarking.md
-  state-and-checkpointing.md
-  stateful-functions.md
   relational-api.md
-  graph-processing.md
+  stateful-functions.md
   resources.md
 
 
