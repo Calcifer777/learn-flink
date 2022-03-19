@@ -15,14 +15,11 @@ import scala.annotation.meta.field
 
 object HelloWorld extends App {
 
-  // val settings = EnvironmentSettings
-  //   .newInstance()
-  //   .inStreamingMode()
-  //   .build();
-  // val tableEnv = TableEnvironment.create(settings)
-
-  val env = StreamExecutionEnvironment.getExecutionEnvironment
-  val tableEnv = StreamTableEnvironment.create(env)
+  val settings = EnvironmentSettings
+    .newInstance()
+    .inStreamingMode()
+    .build()
+  val tableEnv = TableEnvironment.create(settings)
 
   // Register source table
   val sourceSchema = Schema
