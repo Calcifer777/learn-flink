@@ -26,7 +26,7 @@ val flinkDependencies = Seq(
 val otherDependencies = Seq(
   "org.apache.derby"           %  "derby"         % "10.13.1.1" % "provided",
   "org.slf4j"                  %  "slf4j-log4j12" % "1.7.25", // % "runtime"
-  "log4j"                      %  "log4j"         % "1.2.17", //  % "runtime",
+  "org.apache.logging.log4j"   % "log4j-core"     % "2.17.1", //  % "runtime",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
 )
 
