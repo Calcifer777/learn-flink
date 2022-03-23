@@ -15,6 +15,7 @@ Welcome to Flink Notes!
   architecture.md
   windowing.md
   watermarking.md
+  datastream-api.md
   relational-api.md
   stateful-functions.md
   resources.md

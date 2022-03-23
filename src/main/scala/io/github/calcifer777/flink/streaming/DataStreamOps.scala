@@ -56,19 +56,6 @@ object DataStreamOps {
       .returns(Types.CASE_CLASS[Number])
 
     nums.print()
-    /* Does not work
-    val iteration = nums.iterate(5000.toLong)
-    val withIncrement = iteration
-      .map { (n: Number) => if (n.value == 10) n else Number(n.value + 1, n.counter + 1) }
-    
-    // feed data back to next iteration
-    val feedback = withIncrement.filter((n: Number) => n.counter < 10)
-    iteration.closeWith(feedback)
-
-    // data not feedback to iteration
-    val output = withIncrement.filter((n: Number) => n.counter >= 10)
-    output.print()
-    */
 
     flink.execute()
   
