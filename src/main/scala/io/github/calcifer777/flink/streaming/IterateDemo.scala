@@ -21,8 +21,8 @@ object IterateDemo extends App {
 
   def loop(ds: DataStream[(Long, Int)]): (DataStream[(Long, Int)], DataStream[(Long, Int)]) = {
     val inc = ds mapWith { case (v, cnt) => (v+1, cnt+1)}
-    val large = inc filterWith { case (v, _) => v >= 42 }
-    val small = inc filterWith { case (v, _) => v < 42 }
-    (small, large)
+    val forward = inc filterWith { case (v, _) => v >= 42 }
+    val feedback = inc filterWith { case (v, _) => v < 42 }
+    (feedback, forward)
   }
 }

@@ -9,7 +9,10 @@
 ## Todos
 
 - [X] Stream iteration
-- [ ] DataStream API deep dive (process function, watermarks, etc)
+- [ ] DataStream API deep dive 
+    - [ ] process function
+    - [ ] watermarks
+    - [X] output tags
 - [ ] Temporal tables
 - [ ] Versioned tables
 - [ ] CEP
