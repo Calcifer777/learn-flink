@@ -72,3 +72,8 @@ jitwatch.out
 project/**/metals.sbt
 
 .bsp
+
+# Python
+**/.env
+*.pyc
+*.egg-info
