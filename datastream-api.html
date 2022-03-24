@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Datastream API &mdash; Flink Notes 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Windowing" href="windowing.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Flink Notes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state-and-checkpointing.html">State and checkpointing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datastream API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#batch-vs-streaming-modes">Batch vs Streaming modes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#difference-in-tasks-execution-between-batch-and-streaming-mode">Difference in tasks execution between batch and streaming mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#watermarking">Watermarking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#watermarks-generators">Watermarks generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#watermarking-a-kafka-source">Watermarking a Kafka source</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#state-and-fault-tolerance">State and fault tolerance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="windowing.html">Windowing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="relational-api.html">Relational APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stateful-functions.html">Stateful functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Flink Notes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Datastream API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/datastream-api.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="datastream-api">
+<h1>Datastream API<a class="headerlink" href="#datastream-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="batch-vs-streaming-modes">
+<h2>Batch vs Streaming modes<a class="headerlink" href="#batch-vs-streaming-modes" title="Permalink to this headline">¶</a></h2>
+<p>The DataStream API supports different runtime execution modes from which you can choose depending on the requirements of your use case and the characteristics of your job.  There is the “classic” execution behavior of the DataStream API, which we call STREAMING execution mode.  Additionally, there is a batch-style execution mode that we call BATCH execution mode.</p>
+<p>By enabling BATCH execution, we allow Flink to apply additional optimizations that we can only do when we know that our input is bounded.</p>
+<p>Boundedness is a property of a data source that tells us whether all the input coming from that source is known before execution or whether new data will show up, potentially indefinitely.</p>
+<p>Checkpointing and any operations that depend on checkpointing, as well as iterations do not work in batch mode.</p>
+<div class="section" id="difference-in-tasks-execution-between-batch-and-streaming-mode">
+<h3>Difference in tasks execution between batch and streaming mode<a class="headerlink" href="#difference-in-tasks-execution-between-batch-and-streaming-mode" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="watermarking">
+<h2>Watermarking<a class="headerlink" href="#watermarking" title="Permalink to this headline">¶</a></h2>
+<p>Watermarking is a mechanism to measure progress of event time in Flink.</p>
+<p>In order to work with event time, Flink needs to know the events timestamps, meaning each element in the stream needs to have its event timestamp assigned. This is usually done by accessing/extracting the timestamp from some field in the element by using a <code class="docutils literal notranslate"><span class="pre">TimestampAssigner</span></code>. For some sources (e.g. Kafka), event time is already configured in the message.</p>
+<p>There are two places in Flink applications where a WatermarkStrategy can be used:</p>
+<ul class="simple">
+<li><p>directly on sources: preferred, allows watermarking optimization</p></li>
+<li><p>after non-source operation (<code class="docutils literal notranslate"><span class="pre">stream.assignTimestampAndWatermarks(WatermarkStrategy)</span></code>))</p></li>
+</ul>
+<p>For idle sources, define a custom <code class="docutils literal notranslate"><span class="pre">WatermarkStrategy</span></code> to emit watermarks to flush pending buffers after a time window:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">WatermarkStrategy</span>
+  <span class="p">.</span><span class="n">forBoundedOutOfOrderness</span><span class="p">[(</span><span class="nc">Long</span><span class="p">,</span> <span class="nc">String</span><span class="p">)](</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+  <span class="p">.</span><span class="n">withIdleness</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofMinutes</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="section" id="watermarks-generators">
+<h3>Watermarks generators<a class="headerlink" href="#watermarks-generators" title="Permalink to this headline">¶</a></h3>
+<p>There are two different styles of watermark generation:</p>
+<ul class="simple">
+<li><p>periodic: observes stream events and generates watermarks periodically (possibly depending on the stream elements, or purely based on processing time)</p>
+<ul>
+<li><p>Monotonously Increasing Timestamps (<code class="docutils literal notranslate"><span class="pre">WatermarkStrategy.forMonotonousTimestamps()</span></code>)</p></li>
+<li><p>Fixed Amount of Lateness (<code class="docutils literal notranslate"><span class="pre">WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(10))</span></code>)</p></li>
+</ul>
+</li>
+<li><p>punctuated: observes the stream of events and emits a watermark whenever it sees a special element that carries watermark information</p></li>
+</ul>
+</div>
+<div class="section" id="watermarking-a-kafka-source">
+<h3>Watermarking a Kafka source<a class="headerlink" href="#watermarking-a-kafka-source" title="Permalink to this headline">¶</a></h3>
+<p>With Kafka-partition-aware watermark generation, watermarks are generated inside the Kafka consumer, per Kafka partition, and the per-partition watermarks are merged in the same way as watermarks are merged on stream shuffles.</p>
+<p>Each consumer instance tracks the maximum timestamp within each partition, and take as its watermark the minimum of these maximums, less the configured bounded out-of-orderness. Idle partitions will be ignored, if you configure it to do so.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">kafkaSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FlinkKafkaConsumer</span><span class="p">[</span><span class="nc">MyType</span><span class="p">](</span><span class="s">&quot;myTopic&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">props</span><span class="p">)</span>
+<span class="n">kafkaSource</span><span class="p">.</span><span class="n">assignTimestampsAndWatermarks</span><span class="p">(</span>
+  <span class="nc">WatermarkStrategy</span>
+    <span class="p">.</span><span class="n">forBoundedOutOfOrderness</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="mi">20</span><span class="p">)))</span>
+
+<span class="kd">val</span> <span class="n">stream</span><span class="p">:</span> <span class="nc">DataStream</span><span class="p">[</span><span class="nc">MyType</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">addSource</span><span class="p">(</span><span class="n">kafkaSource</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="state-and-fault-tolerance">
+<h2>State and fault tolerance<a class="headerlink" href="#state-and-fault-tolerance" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="windowing.html" class="btn btn-neutral float-right" title="Windowing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Marco Filippone.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

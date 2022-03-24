@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>State and checkpointing &mdash; Flink Notes 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Flink Notes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">State and checkpointing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#checkpoints">Checkpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#barriers">Barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-backend">State Backend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#state-backed-types">State backed types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#checkpointing-types">Checkpointing types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aligned-vs-unaligned">Aligned vs Unaligned</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#synchronous-vs-asynchronous">Synchronous vs Asynchronous</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#full-vs-incremental">Full vs Incremental</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#savepoints">Savepoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#state-types">State types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastream-api.html">Datastream API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="windowing.html">Windowing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="relational-api.html">Relational APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stateful-functions.html">Stateful functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Flink Notes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>State and checkpointing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/state-and-checkpointing.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="state-and-checkpointing">
+<h1>State and checkpointing<a class="headerlink" href="#state-and-checkpointing" title="Permalink to this headline">¶</a></h1>
+<p>Use cases:</p>
+<ul class="simple">
+<li><p>search for certain event patterns happened so far</p></li>
+<li><p>train ML model over a stream of data points</p></li>
+<li><p>manage historic data, allowing efficient acces to past events</p></li>
+<li><p>achieve fault-tolerance through checkpointing. A state helps in restarting the system from the failure point</p></li>
+<li><p>Dynamic rescaling of jobs</p></li>
+<li><p>Stateful transformations</p></li>
+</ul>
+<div class="section" id="checkpoints">
+<h2>Checkpoints<a class="headerlink" href="#checkpoints" title="Permalink to this headline">¶</a></h2>
+<p>A checkpoint marks a specific point in each of the input streams along with the corresponding state for each of the operators.</p>
+<p>In case of a program failure (due to machine-, network-, or software failure), Flink stops the distributed streaming dataflow. The system then restarts the operators and resets them to the latest successful checkpoint. The input streams are reset to the point of the state snapshot. Any records that are processed as part of the restarted parallel dataflow are guaranteed to not have affected the previously checkpointed state.</p>
+<p>Flink’s algorithm for taking the application checkpoints is called asynchronous barrier snapshotting (see <a class="reference external" href="resources.html#streaming-concepts">here</a>).</p>
+</div>
+<div class="section" id="barriers">
+<h2>Barriers<a class="headerlink" href="#barriers" title="Permalink to this headline">¶</a></h2>
+<p>These barriers are special records injected into the data stream by Flink under the hood.</p>
+<p>A barrier separates the records in the data stream into the set of records that goes into the current snapshot, and the records that go into the next snapshot. Multiple barriers from different snapshots can be in the stream at the same time, which means that various snapshots may happen concurrently.</p>
+<p>When an intermediate operator has received a barrier for snapshot n from all of its input streams, it emits a barrier for snapshot n into all of its outgoing streams. Once a sink operator (the end of a streaming DAG) has received the barrier n from all of its input streams, it acknowledges that snapshot n to the checkpoint coordinator. After all sinks have acknowledged a snapshot, it is considered completed.</p>
+</div>
+<div class="section" id="state-backend">
+<h2>State Backend<a class="headerlink" href="#state-backend" title="Permalink to this headline">¶</a></h2>
+<p>When operators contain any form of state, this state must be part of the snapshots as well. Because the state of a snapshot may be large, it is stored in a configurable state backend.</p>
+<div class="section" id="state-backed-types">
+<h3>State backed types<a class="headerlink" href="#state-backed-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Memory (default): stores the state’s data internally as objects on the Java heap</p></li>
+<li><p>Filesystem: stores the state’s data internally into the configured filesystem (e.g. HDFS)</p></li>
+<li><p>RockDB: stores the in-flight data into RockDB. Upon checkpointing the same database is written to a filesystem.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="checkpointing-types">
+<h2>Checkpointing types<a class="headerlink" href="#checkpointing-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="aligned-vs-unaligned">
+<h3>Aligned vs Unaligned<a class="headerlink" href="#aligned-vs-unaligned" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Aligned checkpointing</p>
+<ul>
+<li><p>operators wait for the barrier of each input datastream before forwarding it to the next step of the job graph.</p></li>
+<li><p>all input buffers with records in the checkpoint must be processed when the barrier is forwarded</p></li>
+</ul>
+</li>
+<li><p>Unaligned checkpointing:</p>
+<ul>
+<li><p>Operators react on the first barrier that is stored in its input buffers. They immediately forwards the barrier to their downstream operator by adding it to the end of the output buffers.</p></li>
+<li><p>The operator marks all overtaken records to be stored asynchronously and creates a snapshot of its own state</p></li>
+<li><p>the state of the operator now includes also the state of its buffers</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="synchronous-vs-asynchronous">
+<h3>Synchronous vs Asynchronous<a class="headerlink" href="#synchronous-vs-asynchronous" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Synchronous: Flink operators will stop processing new records while a checkpoint is being written</p></li>
+<li><p>Asynchronous: Flink operators will not stop processing new records while the checkpoint is being written. Asynchronous checkpointing requires a <em>managed state</em> and a state backend that supports this feature (e.g. RockDB)</p></li>
+</ul>
+</div>
+<div class="section" id="full-vs-incremental">
+<h3>Full vs Incremental<a class="headerlink" href="#full-vs-incremental" title="Permalink to this headline">¶</a></h3>
+<p>With incremental checkpointing, Flink nodes not write the full state for every checkpoint for consecutive states; it only save the state difference between two consecutive checkpoints.</p>
+</div>
+</div>
+<div class="section" id="savepoints">
+<h2>Savepoints<a class="headerlink" href="#savepoints" title="Permalink to this headline">¶</a></h2>
+<p>Savepoints are manually triggered checkpoints, which take a snapshot of the program and write it out to a state backend. They rely on the regular checkpointing mechanism for this.</p>
+<p>Savepoints are similar to checkpoints except that they are triggered by the user and don’t automatically expire when newer checkpoints are completed.</p>
+<div class="section" id="state-types">
+<h3>State types<a class="headerlink" href="#state-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Operator state: state is bound to one operator instance; there is one state per operator instance</p></li>
+<li><p>Keyed state: one state per oprrator instance per each key</p></li>
+<li><p>Managed state: controlled by Flink, saved in hash tables</p></li>
+<li><p>Raw state: controlled by the operators, in their own data structures</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Marco Filippone.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

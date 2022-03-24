@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Windowing &mdash; Flink Notes 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Relational APIs" href="relational-api.html" />
+    <link rel="prev" title="Datastream API" href="datastream-api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Flink Notes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state-and-checkpointing.html">State and checkpointing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastream-api.html">Datastream API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Windowing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#window-types">Window types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stream-time-characteristics">Stream time characteristics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#triggers">Triggers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-trigger">Built in trigger</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#evictors">Evictors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#window-lifecycle">Window lifecycle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-evictors">Built-in evictors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to">How to</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="relational-api.html">Relational APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stateful-functions.html">Stateful functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Flink Notes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Windowing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/windowing.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="windowing">
+<h1>Windowing<a class="headerlink" href="#windowing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="window-types">
+<h2>Window types<a class="headerlink" href="#window-types" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Based on</p></th>
+<th class="head"><p>Overlapping</p></th>
+<th class="head"><p>Fixed size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tumbling</p></td>
+<td><p>Time</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sliding</p></td>
+<td><p>Time</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Session</p></td>
+<td><p>Stream activity</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Global</p></td>
+<td><p>Triggers</p></td>
+<td><p>n.d.</p></td>
+<td><p>n.d.</p></td>
+</tr>
+<tr class="row-even"><td><p>Custom</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="stream-time-characteristics">
+<h2>Stream time characteristics<a class="headerlink" href="#stream-time-characteristics" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Processing time</p>
+<ul>
+<li><p>system time of the machine that executes the task</p></li>
+<li><p>best performance and no latency</p></li>
+<li><p>less suitable for distributed environment</p></li>
+</ul>
+</li>
+<li><p>Event time</p>
+<ul>
+<li><p>time at which the event occurred at source</p></li>
+<li><p>embedded in each record</p></li>
+<li><p>provides consistent and deterministic results regardless of order</p></li>
+<li><p>shows latency while waiting for out-of-order records</p></li>
+</ul>
+</li>
+<li><p>Ingestion time</p>
+<ul>
+<li><p>each record gets the source’s current timestamp</p></li>
+<li><p>cannot handle out-of-order events or late data</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<p>A trigger determines when a window is ready to be processed by a window function.</p>
+<p>All window assigners have a default trigger.</p>
+<div class="section" id="built-in-trigger">
+<h3>Built in trigger<a class="headerlink" href="#built-in-trigger" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EventTimeTrigger</span></code>: fires based on progress of event time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ProcessingTimeTrigger</span></code>: fires based on progress of processing time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CountTrigger</span></code>: fires when the number of elements in a indo exceeds the count specified in parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PurgeTrigger</span></code>: takes another trigger as argument and purges it after the inner one fires</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="evictors">
+<h2>Evictors<a class="headerlink" href="#evictors" title="Permalink to this headline">¶</a></h2>
+<p>Evictor is used to remove elements from a window after the trigger fires and before and/or after the window function is applied.</p>
+<div class="section" id="window-lifecycle">
+<h3>Window lifecycle<a class="headerlink" href="#window-lifecycle" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>Window creation</p></li>
+<li><p>Trigger</p></li>
+<li><p>Evictor (optional)</p></li>
+<li><p>Window function</p></li>
+<li><p>Evictor (optional)</p></li>
+<li><p>Result</p></li>
+</ol>
+</div>
+<div class="section" id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">evictBefore</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">evictAfter</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="built-in-evictors">
+<h3>Built-in evictors<a class="headerlink" href="#built-in-evictors" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Evictor</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CountEvictor</span></code></p></td>
+<td><p>Keeps the user-specified number of elements from the window and discards the remaining ones</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.evictor(CountEvictor.of(3))</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DeltaEvictor</span></code></p></td>
+<td><p>Computes a delta between the last element in the window and the remaining elements, then removes the elements whose delta is greater or equal to the threshold</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.evictor(DeltaEvictor.of(treshold,</span> <span class="pre">new</span> <span class="pre">MyDeltaFunction</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TimeEvictor</span></code></p></td>
+<td><p>finds the <code class="docutils literal notranslate"><span class="pre">max_ts</span></code> of the records in a window and remove all records with timestamp less than <code class="docutils literal notranslate"><span class="pre">max_ts</span> <span class="pre">-</span> <span class="pre">interval</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.evictor(TimeEvictor.of(Time.of(3</span> <span class="pre">TimeUnit.SECODDS)))</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="how-to">
+<h2>How to<a class="headerlink" href="#how-to" title="Permalink to this headline">¶</a></h2>
+<p>When using event-time windows, you need to extract the timestmap information from the records
+with an <code class="docutils literal notranslate"><span class="pre">AscendingTimestampExtractor</span></code>.</p>
+<p>When using global windows, you need to specify a <code class="docutils literal notranslate"><span class="pre">trigger</span></code> for
+triggering each window computation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="relational-api.html" class="btn btn-neutral float-right" title="Relational APIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="datastream-api.html" class="btn btn-neutral float-left" title="Datastream API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Marco Filippone.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
