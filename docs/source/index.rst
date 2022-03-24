@@ -13,9 +13,8 @@ Welcome to Flink Notes!
   introduction.md
   state-and-checkpointing.md
   architecture.md
-  windowing.md
-  watermarking.md
   datastream-api.md
+  windowing.md
   relational-api.md
   stateful-functions.md
   resources.md
